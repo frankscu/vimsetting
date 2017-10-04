@@ -7,7 +7,7 @@ set background=dark
 colorscheme molokai
 set laststatus=2
 hi Cursorline cterm=NONE ctermbg=black
-set guifont=Inconsolata:h17
+set guifont="Inconsolata for Powerline":h17
 set number "显示行号
 set cursorline "突出当前行
 set hlsearch
@@ -98,6 +98,18 @@ let g:tagbar_width = 30
 " airline
 " ----------------------------------------
 let g:airline_theme="molokai"
+let g:airline#extensions#tabline#enabled = 1
+let g:airline_powerline_fonts = 1
+if !exists('g:airline_symbols')
+    let g:airline_symnols = {}
+endif
+let g:airline_symnols.space = "\ua0"
+
+" airline symbols
+if !exists('g:airline_powerline_fonts')
+    let g:airline_left_sep = '>'
+    let g:airline_right_sep = '<'
+endif
 
 "-----------------------------------------
 "" for error highlight，防止错误整行标红导致看不清
@@ -203,37 +215,6 @@ let g:tex_conceal = ""
 let g:vim_markdown_math = 1
 
 
-
-"-----------------------------------------
-" Vim airline
-"-----------------------------------------
-let g:airline_powerline_fonts=1
-if !exists('g:airline_symbols')
-    let g:airline_symnols = {}
-endif
-let g:airline_symnols.space = "\ua0"
-" unicode symbols
-"let g:airline_left_sep = '»'
-"let g:airline_left_sep = '▶'
-"let g:airline_right_sep = '«'
-"let g:airline_right_sep = '◀'
-"let g:airline_symbols.linenr = '␊'
-"let g:airline_symbols.linenr = '␤'
-"let g:airline_symbols.linenr = '¶'
-"let g:airline_symbols.branch = '⎇'
-"let g:airline_symbols.paste = 'ρ'
-"let g:airline_symbols.paste = 'Þ'
-"let g:airline_symbols.paste = '∥'
-"let g:airline_symbols.whitespace = 'Ξ'
-
-"" airline symbols
-"let g:airline_left_sep = '[]'
-"let g:airline_left_alt_sep = '[]'
-"let g:airline_right_sep = '[]'
-"let g:airline_right_alt_sep = '[]'
-"let g:airline_symbols.branch = '[]'
-"let g:airline_symbols.readonly = '[]'
-"let g:airline_symbols.linenr = '[]'
 
 "=========================================
 "=========================================
