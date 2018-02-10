@@ -42,6 +42,8 @@ set expandtab
 " Vundle
 " ----------------------------------------
 "'''''''''''''''''''''''''''''''''''''
+set nocompatible              " be iMproved, required
+filetype off                  " required
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 "'''''''''''''''''''''''''''''''''''''''
@@ -84,6 +86,8 @@ Plugin 'Chiel92/vim-autoformat'
 " Multiple selection
 Plugin 'terryma/vim-multiple-cursors'
 Plugin 'junegunn/vim-easy-align'
+call vundle#end()            " required
+filetype plugin indent on    " required
 
 "-----------------------------------------
 " Tagbar
