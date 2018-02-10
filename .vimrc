@@ -3,13 +3,11 @@ filetype on
 filetype plugin on
 filetype plugin indent on
 syntax enable	
+syntax on
 set background=dark
-if has('nvim')
-    colorscheme gruvbox
-else
-    let g:gruvbox_contrast_dark='medium'
-    colorscheme molokai
-endif
+set t_Co=256
+let g:gruvbox_contrast_dark='medium'
+colorscheme gruvbox
 
 set number 
 set hlsearch
@@ -24,12 +22,7 @@ set cursorcolumn
 hi Cursorline cterm=NONE ctermbg=black
 hi CursorColumn cterm=NONE ctermbg=black
 set guifont="Inconsolata for Powerline":h17
-if has("gui_running")
-    let s:uname=system("uname")
-    if s:uname=="Darwin\n"
-        set guifont=Inconsolata\ for\ Powerline:h17
-    endif 
-endif
+
 
 "-----------------------------------------
 " Coding setting
@@ -55,7 +48,6 @@ call vundle#begin()
 Plugin 'VundlerVim/Vundle.vim'
 Plugin 'vim-airline/vim-airline'
 Plugin 'vim-airline/vim-airline-themes'
-Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'vim-scripts/taglist.vim'
 Plugin 'majutsushi/tagbar'
 Plugin 'vim-scripts/indentpython.vim'
@@ -69,54 +61,29 @@ Plugin 'scrooloose/nerdtree'
 Plugin 'scrooloose/nerdcommenter'
 " Indent line
 Plugin 'Yggdroot/indentLine'
-" Align
+" Align  
+" The tabular plugin must come before vim-markdown
 Plugin 'godlygeek/tabular'
-Plugin 'plasticboy/vim-markdown'
-Plugin 'Valloric/YouCompleteMe'
+if !empty("b:markdown_file")
+  Plugin 'plasticboy/vim-markdown'
+endif
 " C++ highlight
 Plugin 'octol/vim-cpp-enhanced-highlight'
 " CERN ROOT highlight
 Plugin 'parnmatt/vim-root'
 Plugin 'frankscu/vim-geant4-syntax'
+
 " Pinyin
 Plugin 'CodeFalling/fcitx-vim-osx'
+
 " Rename
 Plugin 'qpkorr/vim-renamer'
+" Auto complete '()'
 Plugin 'Raimondi/delimitMate'
-if has('nvim')
-    Plugin 'roxma/nvim-completion-manager'
-    Plugin 'Shougo/neco-vim'
-endif
-call vundle#end()
-"''''''''''''''''''''''''''''''''''''
-
-"-----------------------------------------
-" rainbow 
-" ----------------------------------------
-let g:rbpt_colorpairs = [
-            \ ['brown',       'RoyalBlue3'],
-            \ ['Darkblue',    'SeaGreen3'],
-            \ ['darkgray',    'DarkOrchid3'],
-            \ ['darkgreen',   'firebrick3'],
-            \ ['darkcyan',    'RoyalBlue3'],
-            \ ['darkred',     'SeaGreen3'],
-            \ ['darkmagenta', 'DarkOrchid3'],
-            \ ['brown',       'firebrick3'],
-            \ ['gray',        'RoyalBlue3'],
-            \ ['black',       'SeaGreen3'],
-            \ ['darkmagenta', 'DarkOrchid3'],
-            \ ['Darkblue',    'firebrick3'],
-            \ ['darkgreen',   'RoyalBlue3'],
-            \ ['darkcyan',    'SeaGreen3'],
-            \ ['darkred',     'DarkOrchid3'],
-            \ ['red',         'firebrick3'],
-            \ ]
-let g:rbpt_max = 16
-let g:rbpt_loadcmd_toggle = 0
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+Plugin 'Chiel92/vim-autoformat'
+" Multiple selection
+Plugin 'terryma/vim-multiple-cursors'
+Plugin 'junegunn/vim-easy-align'
 
 "-----------------------------------------
 " Tagbar
@@ -127,31 +94,9 @@ let g:tagbar_width = 30
 
 
 "-----------------------------------------
-" YouCompleteMe
-" ----------------------------------------
-nnoremap <leader>gl :YcmCompleter GoToDeclaration<CR>
-nnoremap <leader>gf :YcmCompleter GoToDefinition<CR>
-nnoremap <leader>gg :YcmCompleter GoToDefinitionElseDeclaration<CR>
-let g:ycm_global_ycm_extra_conf = '~/.vim/data/ycm/.ycm_extra_conf.py'
-let g:ycm_confirm_extra_conf = 0
-let g:ycm_seed_identifiers_with_syntax = 0
-let g:ycm_complete_in_comments = 1
-let g:ycm_complete_in_strings = 1
-let g:ycm_filetype_blacklist = {
-            \ 'tagbar' : 1,
-            \ 'nerdtree' : 1,
-            \}
-" syntax check option
-let g:ycm_show_diagnostics_ui = 0
-
-"-----------------------------------------
 " airline
 " ----------------------------------------
-if has('nvim')
-    let g:airline_theme="gruvbox"
-else
-    let g:airline_theme="molokai"
-endif
+let g:airline_theme="gruvbox"
 let g:airline#extensions#tabline#enabled = 1
 let g:airline_powerline_fonts = 1
 if !exists('g:airline_symbols')
@@ -287,17 +232,6 @@ nnoremap <C-H> <C-W><C-H>
 "
 
 "-----------------------------------------
-" Vim markdown 
-"-----------------------------------------
-let g:vim_markdown_folding_disabled = 1
-let g:vim_markdown_folding_style_pythonic = 1
-let g:vim_markdown_override_foldtext = 0
-let g:vim_markdown_conceal = 0
-let g:vim_markdown_toc_autofit = 1
-let g:tex_conceal = ""
-let g:vim_markdown_math = 1
-
-"-----------------------------------------
 " vim-cpp-enhanced-highlight
 "-----------------------------------------
 let g:cpp_class_scope_highlight = 1
@@ -305,32 +239,30 @@ let g:cpp_member_variable_highlight = 1
 let g:cpp_concepts_highlight = 1
 let g:cpp_experimental_simple_template_highlights = 1
 
+
+"-----------------------------------------
+" vim autoformat 
+"-----------------------------------------
+noremap <F3> :Autoformat<CR>
+autocmd FileType vim,tex let b:autoformat_autoindent=0
+
+"-----------------------------------------
+" vim markdown
+"-----------------------------------------
+autocmd FileType BufNewFile,BufRead *.md let b:markdown_file=1
+
+"-----------------------------------------
+" vim easy align
+"-----------------------------------------
+vmap <Leader>a <Plug>(EasyAlign)
+nmap <Leader>a <Plug>(EasyAlign)
+if !exists('g:easy_align_delimiters')
+  let g:easy_align_delimiters = {}
+endif
+let g:easy_align_delimiters['#'] = { 'pattern': '#', 'ignore_groups': ['String'] }
+
 "-----------------------------------------
 " CERN ROOT highlight
 "-----------------------------------------
 autocmd BufNewFile,BufRead *.c,*.cpp,*.cc set syntax+=.root
 autocmd BufNewFile,BufRead *.c,*.cpp,*.cc set syntax+=.geant4
-
-"=========================================
-"=========================================
-if has('nvim')
-    "-----------------------------------------
-    " NeoVim bash
-    "-----------------------------------------
-    tnoremap <Esc> <C-\><C-n>
-    nmap <F2> :bo sp term://zsh\|resize 5<CR>i
-
-    "-----------------------------------------
-    " NeoVim complete 
-    "-----------------------------------------
-    " for python completions
-    let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'jedi')
-    " language specific completions on markdown file
-    let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'mistune')
-
-    " utils, optional
-    let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'psutil')
-    let g:python_support_python3_requirements = add(get(g:,'python_support_python3_requirements',[]),'setproctitle')
-
-endif
-"=========================================
